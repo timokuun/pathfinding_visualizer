@@ -1,0 +1,29 @@
+.node{
+    border: solid black;
+    border-width: 2px 2px 0 0;
+    height: 30px;
+    width: 30px;
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+}
+
+.node-start{
+    background-color: teal;
+}
+
+.node-finish{
+    background-color: green;
+}
+
+.node-wall{
+    background-color: darkgray;
+}
+
+.node-left{
+    border-left-width: 2px;
+}
+
+.node-bot{
+    border-bottom-width: 2px;
+}
