@@ -1,0 +1,8 @@
+
+/* Process of dealing with Dijkstra's visualizer */
+(1) Run the Dijkstra's algorithm. At the same time, keep track of the order of visited nodes [list].
+(2) Visualize the Dijkstra's algorithm by following the list.
+(3) Visualize the shortest path after (2)
+
+/* Some extra features or implementations */
+- on line 7 in PathfindingVisualizer, potentially change these intial values with some math like divide by 2

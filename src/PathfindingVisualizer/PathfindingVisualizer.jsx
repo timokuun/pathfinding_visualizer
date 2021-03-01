@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Node from "./Node/Node";
+import Dijkstra from "../PathfindingAlgorithms/Dijkstra";
 
 import "./PathfindingVisualizer.css";
 
@@ -39,7 +40,20 @@ export default function PathfindingVisualizer() {
         }
     }
 
-    function onClickWall() {}
+    /* onClick handle function to pass into each node */
+    // Would update grid state
+    function handleOnClickWall() {}
+
+    /* modify the appearance of the visited node */
+    function handleOnVisited() {}
+
+    /* Execute Dijkstra's Algorithm */
+    function visualizeDijktra() {
+        // states of the startNode & finishNode
+        let startNode = grid[INITIAL_START_NODE_ROW][INITIAL_START_NODE_COL];
+        let finishNode = grid[INITIAL_FINISH_NODE_ROW][INITIAL_FINISH_NODE_COL];
+        Dijkstra(grid, startNode, finishNode);
+    }
 
     /* Node creation */
     // row, col = number
@@ -66,6 +80,10 @@ export default function PathfindingVisualizer() {
 
     return (
         <div className="grid">
+            <button className="button" onClick={visualizeDijktra}>
+                Dijktra's
+            </button>
+
             {/* [NOTE] list.map((x, y) => {}) : x = element, y = index of the element */}
             {grid.map((row, rowIdx) => {
                 return (
