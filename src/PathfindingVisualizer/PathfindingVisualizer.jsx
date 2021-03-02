@@ -42,7 +42,15 @@ export default function PathfindingVisualizer() {
 
     /* onClick handle function to pass into each node */
     // Would update grid state
-    function handleMoustPress() {}
+    function handleMousePress(e, row, col) {
+        if (e.buttons == 1) {
+            const newGrid = grid;
+            newGrid[row][col].isWall = true;
+            setGrid(newGrid);
+            document.getElementById(`node-${row}-${col}`).className =
+                "node node-wall";
+        }
+    }
 
     function handleMouseRelease() {}
 
@@ -65,6 +73,7 @@ export default function PathfindingVisualizer() {
 
     /* Animate Dijkstra's Algorithm */
     function animateDijktra(visitedNodesInOrder) {
+        if (visitedNodesInOrder.length < 2) return;
         let prevRow = visitedNodesInOrder[1].row;
         let prevCol = visitedNodesInOrder[1].col;
         let row;
@@ -163,7 +172,7 @@ export default function PathfindingVisualizer() {
                                         distance={distance}
                                         isWall={isWall}
                                         previousNode={prevNode}
-                                        handleMoustPress={handleMoustPress}
+                                        handleMousePress={handleMousePress}
                                         handleMouseRelease={handleMouseRelease}
                                     ></Node>
                                 );

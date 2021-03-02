@@ -13,6 +13,8 @@ export default function dijstra(grid, startNode, finishNode) {
         sortNodeByDistance(allNodes);
         let curNode = allNodes.shift();
 
+        if (curNode.isWall === true) continue;
+
         // (1) if we current node has a distance of inifinity that means no open path
         // (2) If current node is the finish node, return
         if (curNode.distance === Infinity || curNode === finishNode)

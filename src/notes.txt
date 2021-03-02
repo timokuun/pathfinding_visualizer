@@ -1,3 +1,6 @@
+/* Top Priority */
+(1) When running algorithm, prevent modification of the grid
+
 
 /* Process of dealing with Dijkstra's visualizer */
 (1) Run the Dijkstra's algorithm. At the same time, keep track of the order of visited nodes [list].
