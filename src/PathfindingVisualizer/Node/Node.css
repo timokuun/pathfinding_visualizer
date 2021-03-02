@@ -1,6 +1,6 @@
-.node{
+.node {
     border: solid black;
-    border-width: 2px 2px 0 0;
+    border-width: 1px 1px 1px 1px;
     height: 30px;
     width: 30px;
     display: inline-block;
@@ -8,22 +8,30 @@
     padding: 0;
 }
 
-.node-start{
+.node-start {
     background-color: teal;
 }
 
-.node-finish{
+.node-visited-first {
+    background-color: orange;
+}
+
+.node-visited {
+    background-color: purple;
+}
+
+.node-finish {
     background-color: green;
 }
 
-.node-wall{
+.node-wall {
     background-color: darkgray;
 }
 
-.node-left{
+.node-left {
     border-left-width: 2px;
 }
 
-.node-bot{
+.node-bot {
     border-bottom-width: 2px;
 }

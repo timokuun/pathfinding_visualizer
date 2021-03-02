@@ -5,6 +5,10 @@
     align-items: center;
 }
 
+.grid-wrapper {
+    border: 1px solid black;
+}
+
 .button {
     height: 2rem;
     width: 10rem;

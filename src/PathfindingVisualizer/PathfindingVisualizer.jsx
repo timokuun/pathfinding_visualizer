@@ -42,7 +42,9 @@ export default function PathfindingVisualizer() {
 
     /* onClick handle function to pass into each node */
     // Would update grid state
-    function handleOnClickWall() {}
+    function handleMoustPress() {}
+
+    function handleMouseRelease() {}
 
     /* modify the appearance of the visited node */
     function handleOnVisited() {}
@@ -50,9 +52,43 @@ export default function PathfindingVisualizer() {
     /* Execute Dijkstra's Algorithm */
     function visualizeDijktra() {
         // states of the startNode & finishNode
-        let startNode = grid[INITIAL_START_NODE_ROW][INITIAL_START_NODE_COL];
-        let finishNode = grid[INITIAL_FINISH_NODE_ROW][INITIAL_FINISH_NODE_COL];
-        Dijkstra(grid, startNode, finishNode);
+        const startNode = grid[INITIAL_START_NODE_ROW][INITIAL_START_NODE_COL];
+        const finishNode =
+            grid[INITIAL_FINISH_NODE_ROW][INITIAL_FINISH_NODE_COL];
+        const visitedNodesInOrder = Dijkstra(grid, startNode, finishNode);
+
+        console.log(`length = ${visitedNodesInOrder.length}`);
+        console.log("finished djikstra");
+
+        animateDijktra(visitedNodesInOrder);
+    }
+
+    /* Animate Dijkstra's Algorithm */
+    function animateDijktra(visitedNodesInOrder) {
+        let prevRow = visitedNodesInOrder[1].row;
+        let prevCol = visitedNodesInOrder[1].col;
+        let row;
+        let col;
+        let i;
+        for (i = 2; i < visitedNodesInOrder.length; i++) {
+            const node = visitedNodesInOrder[i];
+            setTimeout(() => {
+                row = node.row;
+                col = node.col;
+                document.getElementById(
+                    `node-${prevRow}-${prevCol}`
+                ).className = "node node-visited";
+                document.getElementById(`node-${row}-${col}`).className =
+                    "node node-visited-first";
+                prevRow = row;
+                prevCol = col;
+            }, 30 * i);
+        }
+        setTimeout(() => {
+            console.log(prevRow, prevCol);
+            document.getElementById(`node-${prevRow}-${prevCol}`).className =
+                "node node-visited";
+        }, 30 * i);
     }
 
     /* Node creation */
@@ -62,15 +98,12 @@ export default function PathfindingVisualizer() {
         let isStartCol = col === INITIAL_START_NODE_COL;
         let isFinishRow = row === INITIAL_FINISH_NODE_ROW;
         let isFinishCol = col === INITIAL_FINISH_NODE_COL;
-        let lastRowIdx = ROW_SIZE - 1;
 
         return {
             row: row,
             col: col,
             isStartNode: isStartRow && isStartCol,
             isFinishNode: isFinishRow && isFinishCol,
-            isLeftMost: col === 0,
-            isBotMost: row === lastRowIdx,
             isVisited: false,
             distance: Infinity,
             isWall: false,
@@ -85,60 +118,60 @@ export default function PathfindingVisualizer() {
             </button>
 
             {/* [NOTE] list.map((x, y) => {}) : x = element, y = index of the element */}
-            {grid.map((row, rowIdx) => {
-                return (
-                    <div key={rowIdx} className="row">
-                        {row.map((node, nodeIdx) => {
-                            const {
-                                row,
-                                col,
-                                isStartNode,
-                                isFinishNode,
-                                isLeftMost,
-                                isBotMost,
-                                isVisited,
-                                distance,
-                                isWall,
-                                prevNode,
-                            } = node;
+            <div className="grid-wrapper">
+                {grid.map((row, rowIdx) => {
+                    return (
+                        <div key={rowIdx} className="row">
+                            {row.map((node, nodeIdx) => {
+                                const {
+                                    row,
+                                    col,
+                                    isStartNode,
+                                    isFinishNode,
+                                    isVisited,
+                                    distance,
+                                    isWall,
+                                    prevNode,
+                                } = node;
 
-                            /* TODO: DEBUG */
-                            //   if (
-                            //     row === INITIAL_FINISH_NODE_ROW &&
-                            //     col === INITIAL_FINISH_NODE_COL
-                            //   ) {
-                            //     console.log(`row = ${row}`);
-                            //     console.log(`col = ${col}`);
-                            //     console.log(`isStart = ${isStartNode}`);
-                            //     console.log(`isFinish = ${isFinishNode}`);
-                            //     console.log(`isLeftMost = ${isLeftMost}`);
-                            //     console.log(`isBotMost = ${isBotMost}`);
-                            //     console.log(`isVisited = ${isVisited}`);
-                            //     console.log(`distance = ${distance}`);
-                            //     console.log(`isWall = ${isWall}`);
-                            //     console.log(`prevNode = ${prevNode}\n\n`);
-                            //   }
-                            /* END OF DEBUG */
+                                /* TODO: DEBUG */
+                                //   if (
+                                //     row === INITIAL_FINISH_NODE_ROW &&
+                                //     col === INITIAL_FINISH_NODE_COL
+                                //   ) {
+                                //     console.log(`row = ${row}`);
+                                //     console.log(`col = ${col}`);
+                                //     console.log(`isStart = ${isStartNode}`);
+                                //     console.log(`isFinish = ${isFinishNode}`);
+                                //     console.log(`isLeftMost = ${isLeftMost}`);
+                                //     console.log(`isBotMost = ${isBotMost}`);
+                                //     console.log(`isVisited = ${isVisited}`);
+                                //     console.log(`distance = ${distance}`);
+                                //     console.log(`isWall = ${isWall}`);
+                                //     console.log(`prevNode = ${prevNode}\n\n`);
+                                //   }
+                                /* END OF DEBUG */
 
-                            return (
-                                <Node
-                                    key={nodeIdx}
-                                    row={row}
-                                    col={col}
-                                    isStart={isStartNode}
-                                    isFinish={isFinishNode}
-                                    isLeftMost={isLeftMost}
-                                    isBotMost={isBotMost}
-                                    isVisited={isVisited}
-                                    distance={distance}
-                                    isWall={isWall}
-                                    previousNode={prevNode}
-                                ></Node>
-                            );
-                        })}
-                    </div>
-                );
-            })}
+                                return (
+                                    <Node
+                                        key={nodeIdx}
+                                        row={row}
+                                        col={col}
+                                        isStart={isStartNode}
+                                        isFinish={isFinishNode}
+                                        isVisited={isVisited}
+                                        distance={distance}
+                                        isWall={isWall}
+                                        previousNode={prevNode}
+                                        handleMoustPress={handleMoustPress}
+                                        handleMouseRelease={handleMouseRelease}
+                                    ></Node>
+                                );
+                            })}
+                        </div>
+                    );
+                })}
+            </div>
         </div>
     );
 }

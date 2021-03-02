@@ -7,12 +7,12 @@ export default function Node({
     col,
     isStart,
     isFinish,
-    isLeftMost,
-    isBotMost,
     isVisited,
     distance,
     isWall,
     previousNode,
+    handleMoustPress, // event callback handler - so we can update grid in PathfindingVisualizer
+    handleMouseRelease,
 }) {
     /* extra class name for whether the node is a "start node", "finish node", or a "wall" */
     const [extraClassName, setExtraClassName] = useState("");
@@ -34,23 +34,17 @@ export default function Node({
             : "";
         setExtraClassName(name);
 
-        // is current node the left most node
-        let left = isLeftMost ? "node-left" : "";
-        setIsLeft(left);
-
-        // is current node the top most node
-        let bot = isBotMost ? "node-bot" : "";
-        setIsBot(bot);
-
         // is current node visited
         let visited = isVisited ? "node-visited" : "";
         setVisited(visited);
-    }, [isFinish, isStart, isWall, isVisited, isLeftMost, isBotMost]);
+    }, [isFinish, isStart, isWall, isVisited]);
 
     return (
         <div
             id={`node-${row}-${col}`}
-            className={`node ${extraClassName} ${isLeft} ${isBot} ${visited}`}
+            className={`node ${extraClassName} ${visited}`}
+            onMouseDown={handleMoustPress}
+            onMouseUp={handleMouseRelease}
         ></div>
     );
 }
