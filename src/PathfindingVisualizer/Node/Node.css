@@ -22,6 +22,8 @@
 
 .node-visited {
     background-color: purple;
+    animation-name: fill-cell;
+    animation-duration: 1s;
 }
 
 .node-finish {
@@ -38,4 +40,9 @@
 
 .node-bot {
     border-bottom-width: 2px;
+}
+
+@keyframes fill-cell {
+    from {background-color: orange;}
+    to {background-color: purple;}
 }
