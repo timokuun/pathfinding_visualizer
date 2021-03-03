@@ -28,6 +28,7 @@ export default function PathfindingVisualizer() {
 
     /* Initilize the Grid composed of <Nodes> */
     function initializeGrid() {
+        // clear grid to prevent from appending to existing grid;
         console.log("initializeGrid called!\n");
         for (let i = 0; i < ROW_SIZE; i++) {
             let curRow = [];
@@ -40,10 +41,17 @@ export default function PathfindingVisualizer() {
         }
     }
 
+    function handleResetGrid(){
+        console.log("reset grid to default values");
+        //TODO: Currently, re-render does not reset the CSS. Need fix
+        setGrid([]);
+        initializeGrid();
+    }
+
     /* onClick handle function to pass into each node */
     // Would update grid state
     function handleMousePress(e, row, col) {
-        if (e.buttons == 1) {
+        if (e.buttons === 1) {
             const newGrid = grid;
             newGrid[row][col].isWall = true;
             setGrid(newGrid);
@@ -124,6 +132,9 @@ export default function PathfindingVisualizer() {
         <div className="grid">
             <button className="button" onClick={visualizeDijktra}>
                 Dijktra's
+            </button>
+            <button className="button" onClick={handleResetGrid}>
+                Reset
             </button>
 
             {/* [NOTE] list.map((x, y) => {}) : x = element, y = index of the element */}
