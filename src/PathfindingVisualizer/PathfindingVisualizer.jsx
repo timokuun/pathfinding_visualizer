@@ -52,25 +52,48 @@ export default function PathfindingVisualizer() {
         setGrid(newGrid);
     }
 
+    // clear all grid cells except the starting node and finishing node
     function handleResetGrid(){
         //clear grid here
         console.log("Resetting grid");
         for (let i = 0; i < ROW_SIZE; i++) {
             for (let j = 0; j < COLUMN_SIZE; j++) {
-                if(!(i === INITIAL_START_NODE_ROW && j === INITIAL_START_NODE_COL) && !(i === INITIAL_FINISH_NODE_ROW && j === INITIAL_FINISH_NODE_COL)){
-                    document.getElementById(
-                        `node-${i}-${j}`
-                    ).className = "node";
+                //if (i, j) is not the initial node and (i, j) is not the finish node
+                if(i === INITIAL_START_NODE_ROW && j === INITIAL_START_NODE_COL){
+                    document.getElementById(`node-${i}-${j}`).className = "node  node-start";
+                }else if(i === INITIAL_FINISH_NODE_ROW && j === INITIAL_FINISH_NODE_COL){
+                    document.getElementById(`node-${i}-${j}`).className = "node node-finish";
+                }else{
+                    document.getElementById(`node-${i}-${j}`).className = "node";
                 }
             }
         }
         //reset wall and visited nodes
         initializeGrid();
     }
-    /* onClick handle function to pass into each node */
+
+    /**
+     * Onclick handler for node
+     * @param {*} e click event
+     * @param {*} row row to set
+     * @param {*} col column to set
+     */
+    function handleClick(e, row, col){
+        console.log("setting wall " + row + " " + col);
+        const newGrid = grid;
+        newGrid[row][col].isWall = true;
+        setGrid(newGrid);
+        document.getElementById(`node-${row}-${col}`).className =
+            "node node-wall";
+        console.log(grid[row][col]);
+    }
+
+    /* onMouseMovement function to pass into each node */
     // Would update grid state
-    function handleMousePress(e, row, col) {
+    function handleMouseHover(e, row, col) {
+        //when detecting MouseDown and movement
         if (e.buttons === 1) {
+            console.log("setting wall " + row + " " + col);
             const newGrid = grid;
             newGrid[row][col].isWall = true;
             setGrid(newGrid);
@@ -83,8 +106,7 @@ export default function PathfindingVisualizer() {
     function visualizeDijktra() {
         // states of the startNode & finishNode
         const startNode = grid[INITIAL_START_NODE_ROW][INITIAL_START_NODE_COL];
-        const finishNode =
-            grid[INITIAL_FINISH_NODE_ROW][INITIAL_FINISH_NODE_COL];
+        const finishNode = grid[INITIAL_FINISH_NODE_ROW][INITIAL_FINISH_NODE_COL];
         const visitedNodesInOrder = Dijkstra(grid, startNode, finishNode);
         const nodesInShortestPath = getNodesInShortestPath(finishNode);
 
@@ -238,7 +260,8 @@ export default function PathfindingVisualizer() {
                                         distance={distance}
                                         isWall={isWall}
                                         previousNode={prevNode}
-                                        handleMousePress={handleMousePress}
+                                        handleMouseHover={handleMouseHover}
+                                        handleClick={handleClick}
                                     ></Node>
                                 );
                             })}
