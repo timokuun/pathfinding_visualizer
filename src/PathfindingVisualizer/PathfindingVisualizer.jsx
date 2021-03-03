@@ -37,17 +37,36 @@ export default function PathfindingVisualizer() {
     /* Initilize the Grid composed of <Nodes> */
     function initializeGrid() {
         console.log("initializeGrid called!\n");
+        let newGrid = [];
         for (let i = 0; i < ROW_SIZE; i++) {
             let curRow = [];
             for (let j = 0; j < COLUMN_SIZE; j++) {
                 curRow.push(createNode(i, j));
             }
-            setGrid((prevGrid) => {
-                return [...prevGrid, curRow];
-            });
+            newGrid.push(curRow);
+            // setGrid((prevGrid) => {
+            //     return [...prevGrid, curRow];
+            // });
         }
+        //set grid at very end. same functionality as original algo
+        setGrid(newGrid);
     }
 
+    function handleResetGrid(){
+        //clear grid here
+        console.log("Resetting grid");
+        for (let i = 0; i < ROW_SIZE; i++) {
+            for (let j = 0; j < COLUMN_SIZE; j++) {
+                if(!(i === INITIAL_START_NODE_ROW && j === INITIAL_START_NODE_COL) && !(i === INITIAL_FINISH_NODE_ROW && j === INITIAL_FINISH_NODE_COL)){
+                    document.getElementById(
+                        `node-${i}-${j}`
+                    ).className = "node";
+                }
+            }
+        }
+        //reset wall and visited nodes
+        initializeGrid();
+    }
     /* onClick handle function to pass into each node */
     // Would update grid state
     function handleMousePress(e, row, col) {
@@ -186,6 +205,9 @@ export default function PathfindingVisualizer() {
         <div className="grid">
             <button className="button" onClick={visualizeDijktra}>
                 Dijktra's
+            </button>
+            <button className="button" onClick={handleResetGrid}>
+                Reset Grid
             </button>
 
             {/* [NOTE] list.map((x, y) => {}) : x = element, y = index of the element */}
