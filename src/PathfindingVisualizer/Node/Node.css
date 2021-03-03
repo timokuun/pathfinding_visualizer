@@ -12,6 +12,10 @@
     background-color: teal;
 }
 
+.node-shortest-path {
+    background-color: yellow;
+}
+
 .node-visited-first {
     background-color: orange;
 }

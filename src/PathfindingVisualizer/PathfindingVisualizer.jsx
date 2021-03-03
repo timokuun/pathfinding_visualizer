@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Node from "./Node/Node";
-import Dijkstra from "../PathfindingAlgorithms/Dijkstra";
+import {
+    Dijkstra,
+    getNodesInShortestPath,
+} from "../PathfindingAlgorithms/Dijkstra";
 
 import "./PathfindingVisualizer.css";
 
@@ -14,8 +17,8 @@ const INITIAL_FINISH_NODE_COL = 40;
 
 export default function PathfindingVisualizer() {
     /* state variables */
-    // grid: holds the "states" of each node
-    const [grid, setGrid] = useState([]);
+    const [grid, setGrid] = useState([]); // grid: holds the "states" of each node
+    const [isAnimated, setIsAnimated] = useState(false); // isAnimated: whether the alg has been animated
 
     /* update variables functions */
     // initialize the state of the whole grid
@@ -25,6 +28,11 @@ export default function PathfindingVisualizer() {
             setGrid([]);
         }; // [NOTE] to clean up after changes were made during debug
     }, []);
+
+    // // Run animateDijktraShortestPath() when animateDijktra is done
+    // useEffect(() => {
+    //     if (isAnimated) animateDijktraShortestPath();
+    // }, [isAnimated]);
 
     /* Initilize the Grid composed of <Nodes> */
     function initializeGrid() {
@@ -43,7 +51,7 @@ export default function PathfindingVisualizer() {
     /* onClick handle function to pass into each node */
     // Would update grid state
     function handleMousePress(e, row, col) {
-        if (e.buttons == 1) {
+        if (e.buttons === 1) {
             const newGrid = grid;
             newGrid[row][col].isWall = true;
             setGrid(newGrid);
@@ -52,11 +60,6 @@ export default function PathfindingVisualizer() {
         }
     }
 
-    function handleMouseRelease() {}
-
-    /* modify the appearance of the visited node */
-    function handleOnVisited() {}
-
     /* Execute Dijkstra's Algorithm */
     function visualizeDijktra() {
         // states of the startNode & finishNode
@@ -64,40 +67,82 @@ export default function PathfindingVisualizer() {
         const finishNode =
             grid[INITIAL_FINISH_NODE_ROW][INITIAL_FINISH_NODE_COL];
         const visitedNodesInOrder = Dijkstra(grid, startNode, finishNode);
+        const nodesInShortestPath = getNodesInShortestPath(finishNode);
 
         console.log(`length = ${visitedNodesInOrder.length}`);
         console.log("finished djikstra");
 
-        animateDijktra(visitedNodesInOrder);
+        animateDijktra(visitedNodesInOrder, nodesInShortestPath);
     }
 
     /* Animate Dijkstra's Algorithm */
-    function animateDijktra(visitedNodesInOrder) {
-        if (visitedNodesInOrder.length < 2) return;
-        let prevRow = visitedNodesInOrder[1].row;
-        let prevCol = visitedNodesInOrder[1].col;
+    function animateDijktra(visitedNodesInOrder, nodesInShortestPath) {
+        const startNode = visitedNodesInOrder[0];
+        let prevRow = null;
+        let prevCol = null;
         let row;
         let col;
         let i;
-        for (i = 2; i < visitedNodesInOrder.length; i++) {
-            const node = visitedNodesInOrder[i];
+        for (let i = 0; i < visitedNodesInOrder.length; i++) {
+            console.log(i);
+            if (i === visitedNodesInOrder.length - 1) {
+                // To clear the last highlighted "currently processing node"
+                setTimeout(() => {
+                    console.log(prevRow, prevCol);
+                    document.getElementById(
+                        `node-${prevRow}-${prevCol}`
+                    ).className = "node node-visited";
+                    setIsAnimated(true);
+                }, 10 * i); // DEBUG
+                // }, 30 * i);
+
+                setTimeout(() => {
+                    animateDijktraShortestPath(nodesInShortestPath);
+                }, 10 * i);
+                return;
+            }
+
             setTimeout(() => {
-                row = node.row;
-                col = node.col;
-                document.getElementById(
-                    `node-${prevRow}-${prevCol}`
-                ).className = "node node-visited";
-                document.getElementById(`node-${row}-${col}`).className =
-                    "node node-visited-first";
+                const node = visitedNodesInOrder[i];
+
+                console.log(i);
+                console.log(visitedNodesInOrder[i]);
+                console.log(node);
+
+                let row = node.row;
+                let col = node.col;
+                if (
+                    prevRow !== null &&
+                    prevCol !== null &&
+                    (prevRow !== startNode.row || prevCol !== startNode.col)
+                ) {
+                    document.getElementById(
+                        `node-${prevRow}-${prevCol}`
+                    ).className = "node node-visited";
+                }
+
+                if (row !== startNode.row || col !== startNode.col) {
+                    document.getElementById(`node-${row}-${col}`).className =
+                        "node node-visited-first";
+                }
+
                 prevRow = row;
                 prevCol = col;
-            }, 30 * i);
+            }, 10 * i); // DEBUG
+            // }, 30 * i);
         }
-        setTimeout(() => {
-            console.log(prevRow, prevCol);
-            document.getElementById(`node-${prevRow}-${prevCol}`).className =
-                "node node-visited";
-        }, 30 * i);
+    }
+
+    function animateDijktraShortestPath(nodesInShortestPath) {
+        console.log("Animating Shortest Path for Dijkstra's Algorithm");
+        for (let i = 0; i < nodesInShortestPath.length; i++) {
+            setTimeout(() => {
+                const node = nodesInShortestPath[i];
+                document.getElementById(
+                    `node-${node.row}-${node.col}`
+                ).className = "node node-shortest-path";
+            }, 10 * i);
+        }
     }
 
     /* Node creation */
@@ -173,7 +218,6 @@ export default function PathfindingVisualizer() {
                                         isWall={isWall}
                                         previousNode={prevNode}
                                         handleMousePress={handleMousePress}
-                                        handleMouseRelease={handleMouseRelease}
                                     ></Node>
                                 );
                             })}

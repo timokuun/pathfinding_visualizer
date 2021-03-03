@@ -1,4 +1,4 @@
-export default function dijstra(grid, startNode, finishNode) {
+export function Dijkstra(grid, startNode, finishNode) {
     console.log("Starting Dijkstra's Algorithm...");
 
     // list to return
@@ -17,17 +17,17 @@ export default function dijstra(grid, startNode, finishNode) {
 
         // (1) if we current node has a distance of inifinity that means no open path
         // (2) If current node is the finish node, return
-        if (curNode.distance === Infinity || curNode === finishNode)
-            return visitedNodesInOrder;
+        if (curNode.distance === Infinity) return visitedNodesInOrder;
 
-        // update neighbor and add neighbor to queue
-        updateNeighbors(curNode, grid);
+        // mark current node as visited
+        curNode.isVisited = true;
 
         // Push current node to visitedNodesInOrder
         visitedNodesInOrder.push(curNode);
 
-        // mark current node as visited
-        startNode.isVisited = true;
+        if (curNode === finishNode) return visitedNodesInOrder;
+        // update neighbor and add neighbor to queue
+        updateNeighbors(startNode, curNode, grid);
     }
 }
 
@@ -45,7 +45,7 @@ function getAllNodes(grid) {
     return allNodes;
 }
 
-function updateNeighbors(curNode, grid) {
+function updateNeighbors(startNode, curNode, grid) {
     const neighbors = getAllNeighbors(curNode, grid);
     for (const n of neighbors) {
         n.distance = curNode.distance + 1;
@@ -64,4 +64,21 @@ function getAllNeighbors(curNode, grid) {
     if (col < colLength - 1) neighbors.push(grid[row][col + 1]);
     if (row < rowLength - 1) neighbors.push(grid[row + 1][col]);
     return neighbors.filter((neighbor) => !neighbor.isVisited); // return list of nodes that aren't visited
+}
+
+/* Get all the nodes in the shortest path */
+export function getNodesInShortestPath(finishNode) {
+    console.log("Getting nodes in the Shortest Path for Dijkstra...");
+    let curNode = finishNode;
+
+    const nodesInShortestPath = [];
+
+    while (curNode !== null) {
+        console.log(curNode);
+
+        nodesInShortestPath.push(curNode);
+        curNode = curNode.prevNode;
+    }
+    // setIsAnimated(false);
+    return nodesInShortestPath;
 }

@@ -12,7 +12,6 @@ export default function Node({
     isWall,
     previousNode,
     handleMousePress, // event callback handler - so we can update grid in PathfindingVisualizer
-    handleMouseRelease,
 }) {
     /* extra class name for whether the node is a "start node", "finish node", or a "wall" */
     const [extraClassName, setExtraClassName] = useState("");
@@ -42,7 +41,6 @@ export default function Node({
             id={`node-${row}-${col}`}
             className={`node ${extraClassName} ${visited}`}
             onMouseMove={(e) => handleMousePress(e, row, col)}
-            onMouseUp={() => handleMouseRelease(row, col)}
         ></div>
     );
 }
