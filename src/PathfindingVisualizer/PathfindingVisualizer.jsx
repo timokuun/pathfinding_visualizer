@@ -18,7 +18,7 @@ const INITIAL_FINISH_NODE_COL = 40;
 export default function PathfindingVisualizer() {
     /* state variables */
     const [grid, setGrid] = useState([]); // grid: holds the "states" of each node
-    const [isAnimated, setIsAnimated] = useState(false); // isAnimated: whether the alg has been animated
+    const [animationSpeed, setAnimationSpeed] = useState(10); // isAnimated: whether the alg has been animated
 
     /* update variables functions */
     // initialize the state of the whole grid
@@ -72,12 +72,21 @@ export default function PathfindingVisualizer() {
         console.log(`length = ${visitedNodesInOrder.length}`);
         console.log("finished djikstra");
 
-        animateDijktra(visitedNodesInOrder, nodesInShortestPath);
+        animateDijktra(
+            startNode,
+            finishNode,
+            visitedNodesInOrder,
+            nodesInShortestPath
+        );
     }
 
     /* Animate Dijkstra's Algorithm */
-    function animateDijktra(visitedNodesInOrder, nodesInShortestPath) {
-        const startNode = visitedNodesInOrder[0];
+    function animateDijktra(
+        startNode,
+        finishNode,
+        visitedNodesInOrder,
+        nodesInShortestPath
+    ) {
         let prevRow = null;
         let prevCol = null;
         let row;
@@ -92,13 +101,15 @@ export default function PathfindingVisualizer() {
                     document.getElementById(
                         `node-${prevRow}-${prevCol}`
                     ).className = "node node-visited";
-                    setIsAnimated(true);
-                }, 10 * i); // DEBUG
-                // }, 30 * i);
+                }, animationSpeed * i);
 
                 setTimeout(() => {
-                    animateDijktraShortestPath(nodesInShortestPath);
-                }, 10 * i);
+                    animateDijktraShortestPath(
+                        startNode,
+                        finishNode,
+                        nodesInShortestPath
+                    );
+                }, animationSpeed * i);
                 return;
             }
 
@@ -128,20 +139,26 @@ export default function PathfindingVisualizer() {
 
                 prevRow = row;
                 prevCol = col;
-            }, 10 * i); // DEBUG
-            // }, 30 * i);
+            }, animationSpeed * i);
         }
     }
 
-    function animateDijktraShortestPath(nodesInShortestPath) {
+    function animateDijktraShortestPath(
+        startNode,
+        finishNode,
+        nodesInShortestPath
+    ) {
         console.log("Animating Shortest Path for Dijkstra's Algorithm");
-        for (let i = 0; i < nodesInShortestPath.length; i++) {
-            setTimeout(() => {
-                const node = nodesInShortestPath[i];
-                document.getElementById(
-                    `node-${node.row}-${node.col}`
-                ).className = "node node-shortest-path";
-            }, 10 * i);
+        let size = nodesInShortestPath.length;
+        for (let i = size - 1; i >= 0; i--) {
+            const node = nodesInShortestPath[i];
+            if (node !== startNode && node !== finishNode) {
+                setTimeout(() => {
+                    document.getElementById(
+                        `node-${node.row}-${node.col}`
+                    ).className = "node node-shortest-path";
+                }, animationSpeed * (size - i)); // (size - i) to produce the route starting from the startNode
+            }
         }
     }
 
@@ -187,24 +204,6 @@ export default function PathfindingVisualizer() {
                                     isWall,
                                     prevNode,
                                 } = node;
-
-                                /* TODO: DEBUG */
-                                //   if (
-                                //     row === INITIAL_FINISH_NODE_ROW &&
-                                //     col === INITIAL_FINISH_NODE_COL
-                                //   ) {
-                                //     console.log(`row = ${row}`);
-                                //     console.log(`col = ${col}`);
-                                //     console.log(`isStart = ${isStartNode}`);
-                                //     console.log(`isFinish = ${isFinishNode}`);
-                                //     console.log(`isLeftMost = ${isLeftMost}`);
-                                //     console.log(`isBotMost = ${isBotMost}`);
-                                //     console.log(`isVisited = ${isVisited}`);
-                                //     console.log(`distance = ${distance}`);
-                                //     console.log(`isWall = ${isWall}`);
-                                //     console.log(`prevNode = ${prevNode}\n\n`);
-                                //   }
-                                /* END OF DEBUG */
 
                                 return (
                                     <Node
