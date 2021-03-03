@@ -23,23 +23,23 @@ export default function Node({
     useEffect(() => {
         // is current node a 'finish', 'start', or 'wall' node
         let name = isFinish
-            ? "node-finish"
+            ? " node-finish"
             : isStart
-            ? "node-start"
+            ? " node-start"
             : isWall
-            ? "node-wall"
+            ? " node-wall"
             : "";
         setExtraClassName(name);
 
         // is current node visited
-        let visited = isVisited ? "node-visited" : "";
+        let visited = isVisited ? " node-visited" : "";
         setVisited(visited);
     }, [isFinish, isStart, isWall, isVisited]);
 
     return (
         <div
             id={`node-${row}-${col}`}
-            className={`node ${extraClassName} ${visited}`}
+            className={`node${extraClassName}${visited}`}
             onMouseMove={(e) => handleMousePress(e, row, col)}
         ></div>
     );
