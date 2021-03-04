@@ -12,7 +12,7 @@ export default function Node({
     isWall,
     previousNode,
     handleMouseHover, // event callback handler - so we can update grid in PathfindingVisualizer
-    handleClick,
+    handleClickWall,
 }) {
     /* extra class name for whether the node is a "start node", "finish node", or a "wall" */
     const [extraClassName, setExtraClassName] = useState("");
@@ -23,13 +23,7 @@ export default function Node({
     // and it is not empty to eliminate warnings
     useEffect(() => {
         // is current node a 'finish', 'start', or 'wall' node
-        let name = isFinish
-            ? " node-finish"
-            : isStart
-            ? " node-start"
-            : isWall
-            ? " node-wall"
-            : "";
+        let name = isFinish ? " node-finish" : isStart ? " node-start" : isWall ? " node-wall" : "";
         setExtraClassName(name);
 
         // is current node visited
@@ -37,12 +31,5 @@ export default function Node({
         setVisited(visited);
     }, [isFinish, isStart, isWall, isVisited]);
 
-    return (
-        <div
-            id={`node-${row}-${col}`}
-            className={`node${extraClassName}${visited}`}
-            onMouseMove={(e) => handleMouseHover(e, row, col)}
-            onClick={(e) => handleClick(e, row, col)}
-        ></div>
-    );
+    return <div id={`node-${row}-${col}`} className={`node${extraClassName}${visited}`} onMouseMove={(e) => handleMouseHover(e, row, col)} onClick={(e) => handleClickWall(e, row, col)}></div>;
 }

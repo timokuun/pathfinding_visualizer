@@ -27,7 +27,7 @@ export function Dijkstra(grid, startNode, finishNode) {
 
         if (curNode === finishNode) return visitedNodesInOrder;
         // update neighbor and add neighbor to queue
-        updateNeighbors(startNode, curNode, grid);
+        updateNeighbors(curNode, grid);
     }
 }
 
@@ -45,7 +45,7 @@ function getAllNodes(grid) {
     return allNodes;
 }
 
-function updateNeighbors(startNode, curNode, grid) {
+export function updateNeighbors(curNode, grid) {
     const neighbors = getAllNeighbors(curNode, grid);
     for (const n of neighbors) {
         n.distance = curNode.distance + 1;
@@ -53,7 +53,7 @@ function updateNeighbors(startNode, curNode, grid) {
     }
 }
 
-function getAllNeighbors(curNode, grid) {
+export function getAllNeighbors(curNode, grid) {
     const row = curNode.row;
     const col = curNode.col;
     const rowLength = grid.length;
@@ -64,21 +64,4 @@ function getAllNeighbors(curNode, grid) {
     if (col < colLength - 1) neighbors.push(grid[row][col + 1]);
     if (row < rowLength - 1) neighbors.push(grid[row + 1][col]);
     return neighbors.filter((neighbor) => !neighbor.isVisited); // return list of nodes that aren't visited
-}
-
-/* Get all the nodes in the shortest path */
-export function getNodesInShortestPath(finishNode) {
-    console.log("Getting nodes in the Shortest Path for Dijkstra...");
-    let curNode = finishNode;
-
-    const nodesInShortestPath = [];
-
-    while (curNode !== null) {
-        console.log(curNode);
-
-        nodesInShortestPath.push(curNode);
-        curNode = curNode.prevNode;
-    }
-    // setIsAnimated(false);
-    return nodesInShortestPath;
 }

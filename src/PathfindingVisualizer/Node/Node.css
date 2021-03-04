@@ -23,7 +23,7 @@
 .node-visited {
     background-color: purple;
     animation-name: fill-cell;
-    animation-duration: 1s;
+    animation-duration: 0.5s;
 }
 
 .node-finish {
@@ -43,6 +43,10 @@
 }
 
 @keyframes fill-cell {
-    from {background-color: orange;}
-    to {background-color: purple;}
+    from {
+        background-color: orange;
+    }
+    to {
+        background-color: purple;
+    }
 }
