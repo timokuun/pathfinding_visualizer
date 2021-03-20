@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Node from "./Node/Node";
 import { Dijkstra } from "../PathfindingAlgorithms/Dijkstra";
+import { Astar } from "../PathfindingAlgorithms/Astar";
 import { getNodesInShortestPath } from "../PathfindingAlgorithms/helper.js";
 
 import "./PathfindingVisualizer.css";
@@ -21,7 +22,7 @@ export default function PathfindingVisualizer() {
 
     /* useRef state variables */
     const animationRunning = useRef(false);
-    const pathFindingAlgorithm = useRef("Dijkstra");
+    const pathFindingAlgorithm = useRef(0);
 
     /* update variables functions */
     // initialize the state of the whole grid
@@ -117,7 +118,17 @@ export default function PathfindingVisualizer() {
         const startNode = grid[INITIAL_START_NODE_ROW][INITIAL_START_NODE_COL];
         const finishNode = grid[INITIAL_FINISH_NODE_ROW][INITIAL_FINISH_NODE_COL];
 
-        const visitedNodesInOrder = pathFindingAlgorithm.current === "Dijkstra" ? Dijkstra(grid, startNode, finishNode) : BFS(grid, startNode, finishNode);
+        switch (pathFindingAlgorithm.current) {
+            case 0:
+                const visitedNodesInOrder = Dijkstra(grid, startNode, finishNode);
+            case 1:
+                const visitedNodesInOrder = BFS(grid, startNode, finishNode);
+            case 2:
+                const visitedNodesInOrder = Astar(grid, startNode, finishNode);
+            default:
+                break;
+        }
+
         const nodesInShortestPath = getNodesInShortestPath(finishNode);
 
         console.log(`length = ${visitedNodesInOrder.length}`);
@@ -191,12 +202,16 @@ export default function PathfindingVisualizer() {
 
     return (
         <div className="grid">
-            <button className="button" onClick={() => handleAlgoChange("Dijkstra")}>
+            <button className="button" onClick={() => handleAlgoChange(0)}>
                 Dijktra's
             </button>
 
-            <button className="button" onClick={() => handleAlgoChange("BFS")}>
+            <button className="button" onClick={() => handleAlgoChange(1)}>
                 BFS
+            </button>
+
+            <button className="button" onClick={() => handleAlgoChange(2)}>
+                A*
             </button>
 
             <button className="button" onClick={handleResetGrid}>
