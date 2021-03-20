@@ -1,5 +1,16 @@
 export function Astar(grid, startNode, finishNode) {
+    //initialize visited 
 
+    // do this while we havent reached the finish node:
+        // get neighbors
+        // check surrounding nodes and calculate costs
+            // Gcost = how far from starting node;
+            // Hcost = how far from destination node;
+            // Fcost = Gcost + Hcost
+
+        //Pick cell with lowest Fcost
+        // visit cell
+        // repeat
 }
 
 function sortNodeByDistance(allNodes) {
