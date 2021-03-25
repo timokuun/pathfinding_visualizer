@@ -1,20 +1,125 @@
+import { AStarMinHeap } from "./datastructure/AStarMinHeap";
+
 export function Astar(grid, startNode, finishNode) {
-    //initialize visited 
+    console.log("Starting Astar Algorithm...");
 
-    // do this while we havent reached the finish node:
-        // get neighbors
-        // check surrounding nodes and calculate costs
-            // Gcost = how far from starting node;
-            // Hcost = how far from destination node;
-            // Fcost = Gcost + Hcost
+    // Get the list of all the nodes
+    const allNodes = getAllNodes(grid);
+    // Find all the aStarDistance (manhattan distance) for all the nodes & initialize startNode
+    findManhattanDistance(allNodes, startNode, finishNode);
+    // Construct the nodes into a min heap
+    const minHeap = new AStarMinHeap([startNode]);
+    // **list to return
+    const visitedNodesInOrder = [];
 
-        //Pick cell with lowest Fcost
-        // visit cell
-        // repeat
+    console.log(minHeap.size());
+
+    while (minHeap.size() !== 0) {
+        // get the next node with the least heuristic value in the min heap
+        const curNode = minHeap.remove();
+
+        /* if we current node has a distance of inifinity that means no open path */
+        if (curNode.manhattanDistance === Infinity) return visitedNodesInOrder;
+
+        // mark current node as visited
+        curNode.isVisited = true;
+
+        // push current node into the visited order list
+        visitedNodesInOrder.push(curNode);
+
+        /* If current node is the finish node, return */
+        if (curNode === finishNode) return visitedNodesInOrder;
+
+        // update current node's neighbor if it's not the finishNode
+        updateNeighbors(curNode, minHeap, grid);
+    }
 }
 
+// export function Astar(grid, startNode, finishNode) {
+//     console.log("Starting Astar Algorithm...");
+
+//     // Get the list of all the nodes
+//     const allNodes = getAllNodes(grid);
+//     // Find all the aStarDistance (manhattan distance) for all the nodes & initialize startNode
+//     findManhattanDistance(allNodes, startNode, finishNode);
+//     // Construct the nodes into a min heap
+//     const minHeap = new AStarMinHeap(allNodes);
+
+//     console.log(minHeap.peek().aStarHeuristic);
+//     minHeap.remove();
+//     console.log(minHeap.peek().aStarHeuristic);
+//     minHeap.remove();
+//     minHeap.insert({
+//         row: 100,
+//         col: 100,
+//         isStartNode: false,
+//         isFinishNode: false,
+//         isVisited: false,
+//         distance: 10,
+//         manhattanDistance: 10,
+//         aStarHeuristic: 20,
+//         isWall: false,
+//         prevNode: null,
+//     });
+//     minHeap.insert({
+//         row: 100,
+//         col: 101,
+//         isStartNode: false,
+//         isFinishNode: false,
+//         isVisited: false,
+//         distance: 10,
+//         manhattanDistance: 20,
+//         aStarHeuristic: 30,
+//         isWall: false,
+//         prevNode: null,
+//     });
+//     minHeap.insert({
+//         row: 100,
+//         col: 102,
+//         isStartNode: false,
+//         isFinishNode: false,
+//         isVisited: false,
+//         distance: 2,
+//         manhattanDistance: 1,
+//         aStarHeuristic: 3,
+//         isWall: false,
+//         prevNode: null,
+//     });
+// }
+
+// export function Astar(grid, startNode, finishNode) {
+//     console.log("Starting Astar Algorithm...");
+
+//     // Get the list of all the nodes
+//     const allNodes = getAllNodes(grid);
+//     findManhattanDistance(allNodes, startNode, finishNode);
+//     // **list to return
+//     const visitedNodesInOrder = [];
+
+//     while (allNodes.length !== 0) {
+//         sortNodeByDistance(allNodes);
+//         // get the next node with the least heuristic value in the min heap
+//         const curNode = allNodes.shift();
+
+//         /* if we current node has a distance of inifinity that means no open path */
+//         if (curNode.manhattanDistance === Infinity) return visitedNodesInOrder;
+
+//         // mark current node as visited
+//         curNode.isVisited = true;
+
+//         // push current node into the visited order list
+//         visitedNodesInOrder.push(curNode);
+
+//         /* If current node is the finish node, return */
+//         if (curNode === finishNode) return visitedNodesInOrder;
+
+//         // update current node's neighbor if it's not the finishNode
+//         updateNeighbors(curNode, grid);
+//     }
+// }
+
 function sortNodeByDistance(allNodes) {
-    allNodes.sort((nodeA, nodeB) => nodeA.distance - nodeB.distance);
+    allNodes.sort((nodeA, nodeB) => nodeA.aStarHeuristic - nodeB.aStarHeuristic);
 }
 
 function getAllNodes(grid) {
@@ -27,11 +132,45 @@ function getAllNodes(grid) {
     return allNodes;
 }
 
-export function updateNeighbors(curNode, grid) {
+/* Find the Manhattan Distance from each node to the finishNode, also set startNode heuristic value*/
+/* return void, updates allNodes in place */
+// allNodes = all the nodes in the grid
+// finishNode = the destination node
+function findManhattanDistance(allNodes, startNode, finishNode) {
+    const finishNodeRow = finishNode.row;
+    const finishNodeCol = finishNode.col;
+    for (const node of allNodes) {
+        const nodeRow = node.row;
+        const nodeCol = node.col;
+        node.manhattanDistance = Math.abs(finishNodeRow - nodeRow) + Math.abs(finishNodeCol - nodeCol);
+    }
+
+    startNode.distance = 0;
+    startNode.aStarHeuristic = startNode.distance + startNode.manhattanDistance;
+}
+
+// export function updateNeighbors(curNode, grid) {
+//     const neighbors = getAllNeighbors(curNode, grid);
+//     for (const n of neighbors) {
+//         if (n.isWall === true) continue;
+//         const newHeuristic = curNode.distance + 1 + n.manhattanDistance;
+//         n.aStarHeuristic = newHeuristic;
+//         n.distance = curNode.distance + 1;
+//         n.prevNode = curNode;
+//         n.isVisited = false;
+//     }
+// }
+
+export function updateNeighbors(curNode, minHeap, grid) {
     const neighbors = getAllNeighbors(curNode, grid);
     for (const n of neighbors) {
+        if (n.isWall === true) continue;
+        const newHeuristic = curNode.distance + 1 + n.manhattanDistance;
+        n.aStarHeuristic = newHeuristic;
         n.distance = curNode.distance + 1;
         n.prevNode = curNode;
+        n.isVisited = false;
+        minHeap.insert(n);
     }
 }
 

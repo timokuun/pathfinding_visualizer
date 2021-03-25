@@ -13,10 +13,7 @@ export function Dijkstra(grid, startNode, finishNode) {
         sortNodeByDistance(allNodes);
         let curNode = allNodes.shift();
 
-        if (curNode.isWall === true) continue;
-
-        // (1) if we current node has a distance of inifinity that means no open path
-        // (2) If current node is the finish node, return
+        /* if we current node has a distance of inifinity that means no open path */
         if (curNode.distance === Infinity) return visitedNodesInOrder;
 
         // mark current node as visited
@@ -25,7 +22,9 @@ export function Dijkstra(grid, startNode, finishNode) {
         // Push current node to visitedNodesInOrder
         visitedNodesInOrder.push(curNode);
 
+        /* If current node is the finish node, return */
         if (curNode === finishNode) return visitedNodesInOrder;
+
         // update neighbor and add neighbor to queue
         updateNeighbors(curNode, grid);
     }
@@ -48,6 +47,7 @@ function getAllNodes(grid) {
 export function updateNeighbors(curNode, grid) {
     const neighbors = getAllNeighbors(curNode, grid);
     for (const n of neighbors) {
+        if (n.isWall === true) continue;
         n.distance = curNode.distance + 1;
         n.prevNode = curNode;
     }

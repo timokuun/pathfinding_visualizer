@@ -9,6 +9,8 @@ export default function Node({
     isFinish,
     isVisited,
     distance,
+    manhattanDistance,
+    aStarHeuristic,
     isWall,
     previousNode,
     handleMouseHover, // event callback handler - so we can update grid in PathfindingVisualizer

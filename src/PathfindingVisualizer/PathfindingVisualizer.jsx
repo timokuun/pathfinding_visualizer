@@ -14,6 +14,7 @@ const INITIAL_START_NODE_ROW = 10;
 const INITIAL_START_NODE_COL = 10 - 1; // it's 0-indexed
 const INITIAL_FINISH_NODE_ROW = 10;
 const INITIAL_FINISH_NODE_COL = 40;
+// const INITIAL_FINISH_NODE_COL = 25;
 
 export default function PathfindingVisualizer() {
     /* state variables */
@@ -117,14 +118,19 @@ export default function PathfindingVisualizer() {
         // states of the startNode & finishNode
         const startNode = grid[INITIAL_START_NODE_ROW][INITIAL_START_NODE_COL];
         const finishNode = grid[INITIAL_FINISH_NODE_ROW][INITIAL_FINISH_NODE_COL];
+        let visitedNodesInOrder;
 
         switch (pathFindingAlgorithm.current) {
             case 0:
-                const visitedNodesInOrder = Dijkstra(grid, startNode, finishNode);
+                visitedNodesInOrder = Dijkstra(grid, startNode, finishNode);
+                break;
             case 1:
-                const visitedNodesInOrder = BFS(grid, startNode, finishNode);
+                visitedNodesInOrder = BFS(grid, startNode, finishNode);
+                break;
             case 2:
-                const visitedNodesInOrder = Astar(grid, startNode, finishNode);
+                visitedNodesInOrder = Astar(grid, startNode, finishNode);
+                break;
+            // return; // TODO: Change this to "break;" later
             default:
                 break;
         }
@@ -132,7 +138,7 @@ export default function PathfindingVisualizer() {
         const nodesInShortestPath = getNodesInShortestPath(finishNode);
 
         console.log(`length = ${visitedNodesInOrder.length}`);
-        console.log("finished djikstra");
+        console.log("finished algorithm!");
 
         animateDijktra(startNode, finishNode, visitedNodesInOrder, nodesInShortestPath);
     }
@@ -195,6 +201,8 @@ export default function PathfindingVisualizer() {
             isFinishNode: isFinishRow && isFinishCol,
             isVisited: false,
             distance: Infinity,
+            manhattanDistance: Infinity,
+            aStarHeuristic: Infinity,
             isWall: false,
             prevNode: null,
         };
@@ -224,7 +232,7 @@ export default function PathfindingVisualizer() {
                     return (
                         <div key={rowIdx} className="row">
                             {row.map((node, nodeIdx) => {
-                                const { row, col, isStartNode, isFinishNode, isVisited, distance, isWall, prevNode } = node;
+                                const { row, col, isStartNode, isFinishNode, isVisited, distance, manhattanDistance, aStarHeuristic, isWall, prevNode } = node;
 
                                 return (
                                     <Node
@@ -235,6 +243,8 @@ export default function PathfindingVisualizer() {
                                         isFinish={isFinishNode}
                                         isVisited={isVisited}
                                         distance={distance}
+                                        manhattanDistance={manhattanDistance}
+                                        aStarHeuristic={aStarHeuristic}
                                         isWall={isWall}
                                         previousNode={prevNode}
                                         handleMouseHover={handleMouseHover}
