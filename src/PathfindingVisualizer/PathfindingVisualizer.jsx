@@ -14,12 +14,11 @@ const INITIAL_START_NODE_ROW = 10;
 const INITIAL_START_NODE_COL = 10 - 1; // it's 0-indexed
 const INITIAL_FINISH_NODE_ROW = 10;
 const INITIAL_FINISH_NODE_COL = 40;
-// const INITIAL_FINISH_NODE_COL = 25;
 
 export default function PathfindingVisualizer() {
     /* state variables */
     const [grid, setGrid] = useState([]); // grid: holds the "states" of each node
-    const [animationSpeed, setAnimationSpeed] = useState(10);
+    const [animationSpeed, setAnimationSpeed] = useState(2); // it was 10
 
     /* useRef state variables */
     const animationRunning = useRef(false);
