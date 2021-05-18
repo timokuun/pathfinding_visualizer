@@ -1,6 +1,3 @@
-// Do not edit the class below except for the buildHeap,
-// siftDown, siftUp, peek, remove, and insert methods.
-// Feel free to add new properties and methods to the class.
 export class AStarMinHeap {
     constructor(array) {
         this.heap = this.buildHeap(array);
@@ -18,7 +15,6 @@ export class AStarMinHeap {
         /* DEBUG */
         // this.printHeap(array);
         /* END */
-
         return array;
     }
 
@@ -67,7 +63,6 @@ export class AStarMinHeap {
         /* DEBUG */
         // console.log(`Peek: ${this.heap[0]}`);
         /* END */
-
         return this.heap[0];
     }
 
@@ -87,7 +82,6 @@ export class AStarMinHeap {
         // console.log("Remove: ");
         // this.printHeap(this.heap);
         /* END */
-
         return max;
     }
 
@@ -106,6 +100,7 @@ export class AStarMinHeap {
         return this.heap.length;
     }
 
+    /* DEBUG HELPER FUNCTION */
     printHeap(array) {
         var i;
         // for (i of array) {
@@ -118,5 +113,3 @@ export class AStarMinHeap {
         console.log("\n");
     }
 }
-
-// exports.AStarMinHeap = AStarMinHeap;

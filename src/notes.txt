@@ -12,5 +12,30 @@
 - on line 7 in PathfindingVisualizer, potentially change these intial values with some math like divide by 2
 
 
-/* A star */
-***** Change line 131 from return to break
+/***** A star *****/
+~ line 14
+/*** NOTE(1): The heap should only first contain the starting node
+    * This is because if we start with ALL the nodes, we would confuse which route
+    * the starting node should go. Take below as an example[N = unvisited, V = visited]:
+    *      N
+    *      S V V V
+    *      N
+    *
+    *      As you can see, if we put in all the nodes, the algorithm would then select the "N"
+    *      at line 17 or 19 because their distance plus its manhattan distance will be smaller
+    *      than the node in the correct path. When they get visited first, the "N" at line 17 or
+    *      19 will then have a prevNode of S. When we backtrack, whichever path goes to the
+    *      END node will be traced back.
+    *
+    *      ** You can see it by changing the initialization of the
+    *      minHeap below by swapping "startNode" for "allNodes"
+    *
+    */
+// Construct the nodes into a min heap
+const minHeap = new AStarMinHeap([startNode]);
+
+~ line 25
+/*** NOTE(2): Since many nodes could lead up to any node from the starting node,
+    if a node is already VISITED - not just QUEUED - then it means we
+    have already found the shortest path to this node and we can skip it */
+if (curNode.isVisited) continue;

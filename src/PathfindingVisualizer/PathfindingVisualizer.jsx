@@ -18,7 +18,7 @@ const INITIAL_FINISH_NODE_COL = 40;
 export default function PathfindingVisualizer() {
     /* state variables */
     const [grid, setGrid] = useState([]); // grid: holds the "states" of each node
-    const [animationSpeed, setAnimationSpeed] = useState(2); // it was 10
+    const [animationSpeed, setAnimationSpeed] = useState(10); // it was 10
 
     /* useRef state variables */
     const animationRunning = useRef(false);
